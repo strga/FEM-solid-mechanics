@@ -2,7 +2,7 @@ clear;
 clc;
 format longG;
 
-% STEP 1: Perform modal analysis on unscaled matrices
+% Perform modal analysis on unscaled matrices
 disp('Performing modal analysis on unscaled matrices...');
 % K = spconvert(load('/Users/strihavka/Documents/FEM_Diplom/FEM/Matrices_modal/NUnscaled_Dyn_Stiff_damp.dat'));
 % Mass = spconvert(load('/Users/strihavka/Documents/FEM_Diplom/FEM/Matrices_modal/NUnscaled_Dyn_Mass_damp.dat'));
@@ -54,7 +54,7 @@ disp('THE END');
 %-------------------------------------------------------------------------%
 %{
 
-% STEP 2: Perform modal analysis on scaled matrices
+% Perform modal analysis on scaled matrices
 disp('Performing modal analysis on scaled matrices...');
 ScK = spconvert(load('/Users/strihavka/Documents/FEM_Diplom/FEM/Matrices_modal/NEW_Scaled_Dyn_Stiff.dat'));
 ScMass = spconvert(load('/Users/strihavka/Documents/FEM_Diplom/FEM/Matrices_modal/NEW_Scaled_Dyn_Mass.dat'));
@@ -90,9 +90,9 @@ V_filtered_scaled = V_scaled(:, physical_indices_scaled);
 
 
 %-------------------------------------------------------------------------%
-% STEP 3: Export mode shapes to VTK files
+% Export mode shapes to VTK files
 % disp('Exporting mode shapes...');
-% output_dir = '/Users/Adam/Documents/MATLAB/DIPLOM_FEM/Modal_vtk';
+% output_dir = 'Modal_vtk';
 % if ~exist(output_dir, 'dir')
 %     mkdir(output_dir);
 % end
