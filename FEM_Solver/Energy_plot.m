@@ -3,8 +3,7 @@ clc;
 close all;
 
 % Load energy data
-% data = load('/Users/strihavka/Documents/FEM_Diplom/FEM/Vibration_data/Bending/New_Linear_energy_data.txt'); %...1A-3
-data = load('/Users/strihavka/Documents/FEM_Diplom/FEM/Vibration_data/Linear_energy_3D_cl021_11021e.txt');
+data = load('Linear_energy_3D_cl021_11021e.txt');
 time = data(:, 1);
 kinetic_energy = data(:, 2);
 potential_energy = data(:, 3);
@@ -27,7 +26,7 @@ grid on;
 %--------------------------------------------------------------------------
 %{
 % Load energy data1
-data1 = load('/Users/strihavka/Documents/FEM_Diplom/FEM/Vibration_data/Bending_1/New_Linear_energy_data_1.txt'); %...1A-3
+data1 = load('Linear_energy_data_1.txt'); %...1A-3
 time1 = data1(:, 1);
 kinetic_energy1 = data1(:, 2);
 potential_energy1 = data1(:, 3);
@@ -50,7 +49,7 @@ grid on;
 %--------------------------------------------------------------------------
 
 % Load energy data2
-data2 = load('/Users/strihavka/Documents/FEM_Diplom/FEM/Vibration_data/Bending_2/New_Linear_energy_data_2.txt'); %...1A-3
+data2 = load('Linear_energy_data_2.txt'); %...1A-3
 time2 = data2(:, 1);
 kinetic_energy2 = data2(:, 2);
 potential_energy2 = data2(:, 3);
@@ -73,7 +72,7 @@ grid on;
 %--------------------------------------------------------------------------
 
 % Load energy data3
-data3 = load('/Users/strihavka/Documents/FEM_Diplom/FEM/Vibration_data/Bending_3/New_Linear_energy_data_3.txt'); %...1A-3
+data3 = load('Linear_energy_data_3.txt');
 time3 = data3(:, 1);
 kinetic_energy3 = data3(:, 2);
 potential_energy3 = data3(:, 3);
@@ -96,7 +95,7 @@ grid on;
 %--------------------------------------------------------------------------
 
 % Load energy data4
-data4 = load('/Users/strihavka/Documents/FEM_Diplom/FEM/Vibration_data/Bending_4/New_Linear_energy_data_4.txt'); %...1A-3
+data4 = load('Linear_energy_data_4.txt');
 time4 = data4(:, 1);
 kinetic_energy4 = data4(:, 2);
 potential_energy4 = data4(:, 3);
@@ -119,7 +118,7 @@ grid on;
 %--------------------------------------------------------------------------
 
 % Load energy data5
-data5 = load('/Users/strihavka/Documents/FEM_Diplom/FEM/Vibration_data/Bending_5/New_Linear_energy_data_5.txt'); %...1A-3
+data5 = load('New_Linear_energy_data_5.txt');
 time5 = data5(:, 1);
 kinetic_energy5 = data5(:, 2);
 potential_energy5 = data5(:, 3);
