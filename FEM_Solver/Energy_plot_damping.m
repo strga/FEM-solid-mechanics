@@ -3,10 +3,7 @@ clc;
 close all;
 
 % Load dumping energy data
-% data_dump = load('/Users/strihavka/Documents/FEM_Diplom/FEM/Vibration_data/Bending_damping/New_Linear_energy_data_DAMP_damp.txt');
-% data_dump = load('/Users/strihavka/Documents/FEM_Diplom/FEM/Vibration_data/New_Linear_energy_data_DAMP_damp_testing68.txt');
-% data_dump = load('/Users/strihavka/Documents/FEM_Diplom/FEM/Vibration_data/Linear_energy_3D_6_DAMPING.txt');
-data_dump = load('/Users/strihavka/Documents/FEM_Diplom/FEM/Beam_diplom4_energy_conserved_damping_100K_small.txt');
+data_dump = load('Beam_energy_conserved_damping_100K_small.txt');
 time_dump = data_dump(:, 1);
 kinetic_energy = data_dump(:,2);
 potential_energy = data_dump(:,3);
