@@ -7,37 +7,6 @@ M = load_gmsh('/Users/strihavka/Documents/FEM_Diplom/FEM/Elasticity_Geo/AGARD_v2
 mass = spconvert(load('/Volumes/MacOS/Orthotropic_Wing/Ortotropic_wing_0_mass_scaled.dat')); 
 stiff = spconvert(load('/Volumes/MacOS/Orthotropic_Wing/Ortotropic_wing_0_stiff_scaled.dat'));
 
-% M = load_gmsh('/Users/strihavka/Documents/FEM_Diplom/FEM/Elasticity_Geo/MESH_3D/BEAM_3D_CANTILEVER.msh');
-% 
-% mass = spconvert(load('/Users/strihavka/Documents/FEM_Diplom/FEM/Matrices_modal/Mass_matrix_TEST.dat')); 
-% stiff = spconvert(load('/Users/strihavka/Documents/FEM_Diplom/FEM/Matrices_modal/Stiff_matrix_TEST.dat'));
-
-%{
-a = 10;
-n = 15;
-
-[V_scaled, D_scaled, flag] = eigs(stiff, mass, 2*n, 'smallestabs');
-
-if flag ~= 0
-   warning('Some eigenvalues did not converge.');
-end
-
-% --- Identify and zero out constrained DOFs ---
-% fixedDOF = find(abs(diag(mass) - 1.0) < 1e-12);
-% V_scaled(fixedDOF, :) = 0;  % enforce zero displacement at fixed DOFs
-
-% --- Compute frequencies in Hz ---
-freqs = sqrt(diag(D_scaled)) / (2*pi);
-disp('Eigenfrequencies [Hz]:');
-disp(freqs);
-
-for i = a:n
-    phi = reshape(V_scaled(:, i), 3, M.nbNod).';     % interleaved!
-    % phi = phi ./ max(vecnorm(phi,2,2));             % normalize
-    saveVTK3D(M, phi, sprintf('eigenmode_%d.vtk', i));
-end
-%}
-
 n_all = 30;  
 [V, D, flag] = eigs(stiff, mass, n_all, 'smallestabs');
 
