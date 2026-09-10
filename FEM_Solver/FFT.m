@@ -46,7 +46,7 @@ for file_idx = 1:length(fft_files)
         mag = abs(X(1:max_index, :));                      % Amplitude spectrum (in meters)
         global_fft_sum = global_fft_sum + sum(mag, 2);     % Sum across DOFs
 
-        clear X mag;  % free memory early
+        clear X mag;
     end
 
     % Detect peaks on the accumulated spectrum
