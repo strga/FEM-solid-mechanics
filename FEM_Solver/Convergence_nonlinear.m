@@ -3,10 +3,10 @@ close all;
 clc;
 
 % Load data
-residual_data = load('/Users/strihavka/Documents/FEM_Diplom/FEM/Static_beam_diplom/residual_R_log_case5.txt');   % [iteration, ||R||]
-du_data       = load('/Users/strihavka/Documents/FEM_Diplom/FEM/Static_beam_diplom/residual_du_log_case5.txt');  % [iteration, ||Δu||]
+residual_data = load('residual_R_log_case5.txt');   % iteration, ||R||
+du_data       = load('residual_du_log_case5.txt');  % iteration, ||du||
 
-% Extract columns
+
 iters_res = residual_data(:,1);
 res_norm = residual_data(:,2);
 iters_du = du_data(:,1);
