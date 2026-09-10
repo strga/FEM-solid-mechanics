@@ -21,10 +21,6 @@
 #include "dynamics.h"
 #include "problems.h"
 
-#include "Triplet_1.h"
-#include "sparse_1.h"
-#include "vector_1.h"
-
 // #define POISSON2D
 // #define STATICS2D
 // #define DYNAMICS2D
@@ -299,7 +295,7 @@ int main() {
     // }
     // printf("Max displacement = %.10e\n", max_disp);
 
-    // --- H0 from undeformed Y extents ---
+    // H0 from undeformed Y extents
     double y_min = 1e300, y_max = -1e300;
     for (int i = 0; i < M.NPoints; ++i) {
         double y = M.y[i];
@@ -309,7 +305,7 @@ int main() {
     double H0  = fabs(y_max - y_min);
     double tol = 1e-6 * (H0 > 0 ? H0 : 1.0);
 
-    // --- average top-face displacement along +X (ux) ---
+    // average top-face displacement along +X (ux)
     double sumUxTop = 0.0; int cntTop = 0;
     for (int i = 0; i < M.NPoints; ++i) {
         if (fabs(M.y[i] - y_max) <= tol) {   // node on top face
@@ -439,6 +435,7 @@ mesh M;
     double f_FFT = 1 / (2 * dt);
     double T = dt * nSteps;
 
+    // Inner composite structure fiber orientation
     double angleX = 0.0; //YZ
     double angleY = -45.0; //XZ interested in this one
     double angleZ = 0.0; //XY
@@ -718,7 +715,6 @@ void Mesh_Classify_Nodes(mesh *M)
         }
     }
 
-    // Cleanup allocated memory
     free(isSurfaceNode);
 }
 
