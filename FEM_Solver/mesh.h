@@ -4,7 +4,7 @@
 /* ----------------------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------------------- */
 #define INSIDE 0
-#define DIRICHLET_BC 1 
+#define DIRICHLET_BC 1
 #define NEUMANN_BC 11
 #define NEUMANN_LOAD 10
 #define NEUMANN_FREE 11

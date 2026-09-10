@@ -32,10 +32,10 @@ void initializeSimulationConfig(SimulationConfig *config) {
     // snprintf(config->timeSeriesFile, sizeof(config->timeSeriesFile), "Wing_matrix_etc/Beam_FFT.dat"); //FFT required data set
 
     // FOR WING
-    snprintf(config->displacementFile, sizeof(config->displacementFile), "Orthotropic_Wing/Wing_-45_displacement.dat"); //Displacemen / vibration of chosen point
-    snprintf(config->energyFile, sizeof(config->energyFile), "Orthotropic_Wing/Wing_-45_energy_conserved.txt"); // Conservation of energy file
-    snprintf(config->energyDampingFile, sizeof(config->energyDampingFile), "Orthotropic_Wing/Wing_-45_energy_conserved_damp.txt"); // Conservaiton of damped system
-    snprintf(config->timeSeriesFile, sizeof(config->timeSeriesFile), "Orthotropic_Wing/Wing_-45_FFT.dat"); //FFT required data set
+    snprintf(config->displacementFile, sizeof(config->displacementFile), "Beam_diplom4_displacement_damping_100K_small.dat"); //Displacemen / vibration of chosen point
+    snprintf(config->energyFile, sizeof(config->energyFile), "Beam_diplom4_energy_conserved_damping_100K_small.txt"); // Conservation of energy file
+    snprintf(config->energyDampingFile, sizeof(config->energyDampingFile), "Beam_diplom4_energy_conserved_damping_100K_small.txt"); // Conservaiton of damped system
+    snprintf(config->timeSeriesFile, sizeof(config->timeSeriesFile), "Beam_diplom4_FFT_damping_100K_small.dat"); //FFT required data set
 }
 
 int findNeumannBoundaryNode(const mesh *M) {
@@ -282,8 +282,8 @@ void NewmarkIntegrate(mesh *this, csr *M_csr, csr *K_csr, csr *D_csr , double *F
 
         if (saveVibration && step < 80000) {
             char filename[256];
-            // snprintf(filename, sizeof(filename), "Newmark/Bend_3D_wing_%04d.vtk", step); // Animaition of vibraiotn simulaton
-            snprintf(filename, sizeof(filename), "Orthotropic_Wing/Wing_-45_%06d.vtk", step); // Animaition of vibraiotn simulaton wing
+            snprintf(filename, sizeof(filename), "Newmark/100K_damping/Bend_damping100K_small_%06d.vtk", step); // Animaition of vibraiotn simulaton
+            // snprintf(filename, sizeof(filename), "Wing_testing_2/Wing_-45_%06d.vtk", step); // Animaition of vibraiotn simulaton wing
             // snprintf(filename, sizeof(filename), "Wing_animation/Beam_silicon_%06d.vtk", step); // Animaition of vibraiotn simulaton
             
             if (this->dim == 2) {

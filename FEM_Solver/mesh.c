@@ -9,7 +9,6 @@
 #include "gmshtools.h"
 #include "integral.h"
 #include "triplet.h"
-#include "Triplet_1.h"
 #include "gelement.h"
 #include "gelement3D.h"
 #include "Mesh_GetBndrSide.h"
@@ -1726,16 +1725,15 @@ void initializeMaterialProperties(mesh *M, MaterialProperties *materials)
                 // materials[i].rho = 7800;
                 // materials[i].model = SVK; // SVK
 
-                materials[i].E = 1.6e6;
-                materials[i].nu = 0.4;
-                materials[i].rho = 1250;
-                materials[i].model = SVK; // SVK My choosing
-
-                // materials[i].E = 1.4e6;
+                // materials[i].E = 1.6e6;
                 // materials[i].nu = 0.4;
-                // materials[i].rho = 1000;
-                // materials[i].model = SVK; // SVK
-                // materials[i].model = NEOHOOKE; // SVK
+                // materials[i].rho = 1250;
+                // materials[i].model = SVK;// SVK My choosing
+
+                materials[i].E = 70e9;
+                materials[i].nu = 0.32;
+                materials[i].rho = 2710;
+                materials[i].model = SVK; //NEOHOOKE
                 break;
             case ALUMINUM:
                 materials[i].E = 70e9;
@@ -2357,6 +2355,7 @@ void computeElasticityMatrixOrthotropic(MaterialProperties mat, double D[6][6], 
     D[5][5] = G12;
     
     if (angleX != 0.0 || angleY != 0.0 || angleZ != 0.0) {
+        // printf("Angel triggered\n");
         double A[3][3];
         double T[6][6], D_rot[6][6];
         computeRotationMatrix(angleX, angleY, angleZ, A);

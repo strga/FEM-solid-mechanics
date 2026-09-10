@@ -126,11 +126,11 @@ void PrintCSR(const char *label, csr *this) {
 /* ------------------------------------------------------------------------------------------------- */
 void CSR_InitFromTriplet(csr* this, triplet* tri)
 {
-    printf("Triplet_Sort_CSRFromTriplet\n");
+    // printf("Triplet_Sort_CSRFromTriplet\n");
     Triplet_Sort1(tri, 0, tri->nz-1); 
-    printf("Triplet_Unique_CSRFromTriplet\n");
+    // printf("Triplet_Unique_CSRFromTriplet\n");
     Triplet_Unique(tri);
-    printf("CSR_Allocate_CSRFromTriplet\n");
+    // printf("CSR_Allocate_CSRFromTriplet\n");
     CSR_Allocate(this, tri->n, tri->nz);
     printf("Non-zero(nz) elements: %d \t Total DOFs(n): %d \n", tri->nz, tri->n);
 

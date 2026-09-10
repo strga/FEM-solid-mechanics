@@ -400,13 +400,6 @@ void InitializeDynamicProblem3D(mesh *M, triplet *mass, triplet *stiff, triplet 
     *F = calloc(*nDOF, sizeof(double));
     *dirichletValues = calloc(*nDOF, sizeof(double));
 
-    // for (int i = 0; i < M->NPoints; i++) {
-    //     if (M->PointMark[i] == DIRICHLET_BC) {
-    //         (*dirichletValues)[3 * i] = 0.0;
-    //         (*dirichletValues)[3 * i + 1] = 0.0;
-    //         (*dirichletValues)[3 * i + 2] = 0.0;
-    //     }
-    // }
     for (int elem = 0; elem < M->NTriangles + M->NQuads; elem++) {
         if (M->ElementMark[elem] == DIRICHLET_BC) {
             gelement3D K;
@@ -425,7 +418,7 @@ void InitializeDynamicProblem3D(mesh *M, triplet *mass, triplet *stiff, triplet 
         int dof_index = 3 * i;
         double x = M->x[i];
         (*v)[dof_index] = 0.0;
-        (*v)[dof_index + 1] = -2.0;
+        (*v)[dof_index + 1] = -0.5;
         (*v)[dof_index + 2] = 0.0;
     }
 
@@ -448,9 +441,9 @@ void InitializeDynamicProblem3D(mesh *M, triplet *mass, triplet *stiff, triplet 
     CSR_InitFromTriplet(K_csr, stiff); printf("CSR_InitFromTriplet STIFF done\n");
     CSR_InitFromTriplet(D_csr, dump); printf("CSR_InitFromTriplet DAMP done\n");
 
-    saveSparseMatrixToFile(M_csr, "Matrices_modal/Mass_matrix.dat");
-    saveSparseMatrixToFile(K_csr, "Matrices_modal/Stiff_matrix.dat");
-    saveSparseMatrixToFile(D_csr, "Matrices_modal/Damping_matrix.dat");
+    saveSparseMatrixToFile(M_csr, "Matrices_modal/Mass_matrix_damping_100K.dat");
+    saveSparseMatrixToFile(K_csr, "Matrices_modal/Stiff_matrix_damping_100K.dat");
+    saveSparseMatrixToFile(D_csr, "Matrices_modal/Damping_matrix_damping_100K.dat");
     printf("Stop after unscaled matrices loaded:\n");
     getchar();
 }
@@ -459,9 +452,9 @@ void ExecuteDynamicAnalysis3D(mesh *M, csr *M_csr, csr *K_csr, csr *D_csr, doubl
     
     scaleMatricesForDirichlet(M, M_csr, Damping ? D_csr : NULL, omega, eps1, eps2, 3, Damping);
 
-    saveSparseMatrixToFile(M_csr, "Matrices_modal/Mass_matrix_scaled.dat");
-    saveSparseMatrixToFile(K_csr, "Matrices_modal/Stiff_matrix_scaled.dat");
-    saveSparseMatrixToFile(D_csr, "Matrices_modal/Damping_matrix_scaled.dat");
+    saveSparseMatrixToFile(M_csr, "Matrices_modal/Mass_matrix_scaled_damping_100K.dat");
+    saveSparseMatrixToFile(K_csr, "Matrices_modal/Stiff_matrix_scaled_damping_100K.dat");
+    saveSparseMatrixToFile(D_csr, "Matrices_modal/Damping_matrix_scaled_damping_100K.dat");
 
     NewmarkIntegrate(M, M_csr, K_csr, D_csr, F, u, v, a, dt, nSteps, Damping, saveVKT, saveData, config);
 }
@@ -551,10 +544,10 @@ void InitializeDynamicProblem3D_Orthotropic(mesh *M, triplet *mass, triplet *sti
     // saveSparseMatrixToFile(K_csr, "Wing_matrix_etc/Orthotropic_xyz_0(-90)0_stiffness.dat");
     // saveSparseMatrixToFile(D_csr, "Wing_matrix_etc/Orthotropic_xyz_0(-90)0_damping.dat");
 
-    saveSparseMatrixToFile(M_csr, "Orthotropic_Wing/Ortotropic_wing_-45_mass.dat");
-    saveSparseMatrixToFile(K_csr, "Orthotropic_Wing/Ortotropic_wing_-45_stiff.dat");
+    saveSparseMatrixToFile(M_csr, "Wing_testing/Ortotropic_wing_0_mass.dat");
+    saveSparseMatrixToFile(K_csr, "Wing_testing/Ortotropic_wing_0_stif.dat");
     if (Damping) {
-        saveSparseMatrixToFile(D_csr, "Orthotropic_Wing/Ortotropic_wing_-45_damping.dat");
+        saveSparseMatrixToFile(D_csr, "Wing_testing/Ortotropic_wing_0_damping.dat");
     }
     printf("Stop after unscaled matrices loaded:\n");
     getchar();
@@ -568,10 +561,10 @@ void ExecuteDynamicAnalysis3D_Orthotropic(mesh *M, csr *M_csr, csr *K_csr, csr *
     // saveSparseMatrixToFile(K_csr, "Wing_matrix_etc/Orthotropic_xyz_0(-90)0_stiffness_scaled.dat");
     // saveSparseMatrixToFile(D_csr, "Wing_matrix_etc/Orthotropic_xyz_0(-90)0_damping_scaled.dat");
 
-    saveSparseMatrixToFile(M_csr, "Orthotropic_Wing/Ortotropic_wing_-45_mass_scaled.dat");
-    saveSparseMatrixToFile(K_csr, "Orthotropic_Wing/Ortotropic_wing_-45_stiff_scaled.dat");
+    saveSparseMatrixToFile(M_csr, "Wing_testing/Ortotropic_wing_0_mass_scaled.dat");
+    saveSparseMatrixToFile(K_csr, "Wing_testing/Ortotropic_wing_0_stiff_scaled.dat");
     if (Damping) {
-        saveSparseMatrixToFile(D_csr, "Orthotropic_Wing/Ortotropic_wing_-45_damping_scaled.dat");
+        saveSparseMatrixToFile(D_csr, "Wing_testing/Ortotropic_wing_0_damping_scaled.dat");
     }
     NewmarkIntegrate(M, M_csr, K_csr, D_csr, F, u, v, a, dt, nSteps, Damping, saveVKT, saveData, config);
 }

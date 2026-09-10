@@ -35,8 +35,8 @@ void solveNonLinear(mesh *M, double *u_global, triplet *stiff, double *residual,
 
     double norm_du0_sq = 1.0;
 
-    FILE *residual_file = fopen("residual_R_log_case5.txt", "w");
-    FILE *du_file = fopen("residual_du_log_case5.txt", "w");
+    FILE *residual_file = fopen("residual_R_log_tension.txt", "w");
+    FILE *du_file = fopen("residual_du_log_tension.txt", "w");
 
     if (!residual_file || !du_file) {
         fprintf(stderr, "Failed to open residual output files.\n");
@@ -82,12 +82,12 @@ void solveNonLinear(mesh *M, double *u_global, triplet *stiff, double *residual,
         // Mesh_Discretize_NonlinearStatics3D(M, stiff, residual, f_ext, P_int, u_global, dirichletValues, psi_force_3D, F_mag, azimuth_deg, elev_deg);
 
         double RNumerator = 0.0;
-        double RDenominator = 1.0;
+        double RDenominator = 0.0;
         for (int i = 0; i < nDOF; i++) {
             RNumerator += residual[i] * residual[i];
             RDenominator += f_ext[i] * f_ext[i];
         }
-        double convergence_R = sqrt( RNumerator / RDenominator );
+        double convergence_R = RNumerator / (1.0 + RDenominator);
         
         double delta_convergence_R = prev_convergence_R;
 

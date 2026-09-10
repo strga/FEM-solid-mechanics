@@ -21,19 +21,15 @@
 #include "dynamics.h"
 #include "problems.h"
 
-#include "Triplet_1.h"
-#include "sparse_1.h"
-#include "vector_1.h"
-
 // #define POISSON2D
 // #define STATICS2D
 // #define DYNAMICS2D
 // #define POISSON3D
 // #define STATICS3D
 // #define STATICS3D_ORTHO
-// #define DYNAMICS3D
+#define DYNAMICS3D
 // #define DYNAMICS3D_ORTHO
-#define NONLINEAR
+// #define NONLINEAR
 // #define NONLINEAR_DYNAMICS
 
 //------------------------------------------------------------------------------------------------------------
@@ -278,31 +274,53 @@ int main() {
     int solverType = 1;    // 1 = UMFPACK, 2 = Iterative Solver
     double tolerance = 1e-9;
 
-    int nDOF = 3 * M.NPoints;
-
-    double F_magnitude = 100;
-    double azimuth_deg = 270.0; //xy - plane
+    double F_magnitude = 125000;
+    double azimuth_deg = 0.0; //xy - plane
     double elevation_deg = 0.0; // z - direction
 
-    Mesh_Load(&M, "Elasticity_Geo/MESH_3D/BEAM_3D_CANTILEVER.msh");
+    Mesh_Load(&M, "Elasticity_Geo/MESH_3D/SHEAR_3D.msh");
     // Mesh_Load(&M, "Elasticity_Geo/Vocals.msh");
+    int nDOF = 3 * M.NPoints;
 
     Element_vertex_print(&M, FALSE);
-    printf("case1\n");
-    getchar();
-    printf("case2\n");
-
     InitializeStaticsProblem3D(&M, &stiff, &K_csr, &b, &dirichletValues, &x, F_magnitude, azimuth_deg, elevation_deg, gravity);
     
     ExecuteStaticsAnalysis3D(&M, &K_csr, b, x, nDOF, solverType, tolerance);
     // saveVectorToFile(b, 3*M.NPoints, 1, "Linear_load_vector.txt");
-    exportDisplacementToVTK_3D(&M, x, "Sillicone_Rubber_100N_4.vtk");
+    // exportDisplacementToVTK_3D(&M, x, "Linear_shear_tension.vtk");
 
-    double max_disp = 0;
-    for (int i = 0; i < 3 * M.NPoints; i++) {
-        if (fabs(x[i]) > max_disp) max_disp = fabs(x[i]);
+    // double max_disp = 0;
+    // for (int i = 0; i < 3 * M.NPoints; i++) {
+    //     if (fabs(x[i]) > max_disp) max_disp = fabs(x[i]);
+    // }
+    // printf("Max displacement = %.10e\n", max_disp);
+
+    // --- H0 from undeformed Y extents ---
+    double y_min = 1e300, y_max = -1e300;
+    for (int i = 0; i < M.NPoints; ++i) {
+        double y = M.y[i];
+        if (y < y_min) y_min = y;
+        if (y > y_max) y_max = y;
     }
-    printf("Max displacement = %.10e\n", max_disp);
+    double H0  = fabs(y_max - y_min);
+    double tol = 1e-6 * (H0 > 0 ? H0 : 1.0);
+
+    // --- average top-face displacement along +X (ux) ---
+    double sumUxTop = 0.0; int cntTop = 0;
+    for (int i = 0; i < M.NPoints; ++i) {
+        if (fabs(M.y[i] - y_max) <= tol) {   // node on top face
+            sumUxTop += x[3*i + 0];                 // ux component
+            cntTop++;
+        }
+    }
+    double Delta_s = (cntTop ? sumUxTop / cntTop : 0.0);   // [m]
+    double gamma   = (H0 ? Delta_s / H0 : 0.0);            // [-]
+    double tau     = F_magnitude;                           // Pa (traction)
+    double G_sec   = (gamma ? tau / gamma : 0.0);           // Pa
+
+    printf("Δs = %.6e m\n", Delta_s);
+    printf("γ   = %.6e [-]\n",  gamma);
+    printf("G   = %.6e Pa (%.3f MPa)\n", G_sec, G_sec/1e6);
 
     CleanupStaticsProblem3D(&stiff, &K_csr, b, dirichletValues, x);
 
@@ -349,17 +367,17 @@ mesh M;
     double *u, *v, *a, *F, *dirichletValues;
 
     // Control parameters
-    double eps1 = 0.00012;
-    double eps2 = 0.00004;
+    double eps1 = 0.00005;
+    double eps2 = 0.0006;
     double alpha = 2.0;
     int gravity = FALSE;
-    int Damping = FALSE;
+    int Damping = TRUE;
     double dt = 0.00006;
-    int nSteps = 10000;
+    int nSteps = 50000;
     int saveVKT = FALSE;
     int saveData = TRUE;
     
-    double omega = 2.57129586186301;
+    double omega = 52.8586535647;
     
     // ---- NEW versions ---
     // double omega = 88.5883264487756;//Version cl0.21
@@ -418,7 +436,7 @@ mesh M;
     double T = dt * nSteps;
 
     double angleX = 0.0; //YZ
-    double angleY = 0.0; //XZ interested in this one
+    double angleY = -45.0; //XZ interested in this one
     double angleZ = 0.0; //XY
 
     Mesh_Load(&M,"Elasticity_Geo/AGARD_v2.msh");
@@ -446,8 +464,8 @@ mesh M;
     int maxIter = 2000;
     double tolerance = 1e-16;
 
-    double F_magnitude = 100.0; //WAS 100
-    double azimuth_deg = 270.0; //xy - plane
+    double F_magnitude = 125000.0; //WAS 100
+    double azimuth_deg = 0.0; //xy - plane
     double elevation_deg = 0.0; // z - direction
 
     Mesh_Load(&M, "Elasticity_Geo/MESH_3D/BEAM_3D_CANTILEVER.msh");
@@ -460,15 +478,41 @@ mesh M;
     // saveVectorToFile(displacement, 3*M.NPoints, 1, "Nonlinear_load_vector.txt");
     // ExecuteNonlinearElasticityAnalysis3D(&M, stiff, displacement, residual, dirichletValues, F_magnitude, azimuth_deg, elevation_deg, maxIter, tolerance);
     ExecuteNonlinearElasticityAnalysis3D(&M, stiff, displacement, residual, f_ext, P_int, dirichletValues, F_magnitude, azimuth_deg, elevation_deg, maxIter, tolerance);
-    // exportDisplacementToVTK_3D(&M, displacement, "NonlinearElasticity_SVK_BUCKLING_SILICONE.vtk");
-    exportDisplacementToVTK_3D(&M, displacement, "Sillicone_Rubber_100N_Nonlinear_4.vtk");
+    // exportDisplacementToVTK_3D(&M, displacement, "Nonlinear_shear_tensionSVK.vtk");
 
 
-    double max_disp = 0;
-    for (int i = 0; i < 3 * M.NPoints; i++) {
-        if (fabs(displacement[i]) > max_disp) max_disp = fabs(displacement[i]);
+    // double max_disp = 0;
+    // for (int i = 0; i < 3 * M.NPoints; i++) {
+    //     if (fabs(displacement[i]) > max_disp) max_disp = fabs(displacement[i]);
+    // }
+    // printf("Max displacement = %.10e\n", max_disp);
+
+
+    double y_min = 1e300, y_max = -1e300;
+    for (int i = 0; i < M.NPoints; ++i) {
+        double y = M.y[i];
+        if (y < y_min) y_min = y;
+        if (y > y_max) y_max = y;
     }
-    printf("Max displacement = %.10e\n", max_disp);
+    double H0  = fabs(y_max - y_min);
+    double tol = 1e-6 * (H0 > 0 ? H0 : 1.0);
+
+    // --- average top-face displacement along +X (ux) ---
+    double sumUxTop = 0.0; int cntTop = 0;
+    for (int i = 0; i < M.NPoints; ++i) {
+        if (fabs(M.y[i] - y_max) <= tol) {   // node on top face
+            sumUxTop += displacement[3*i + 0];                 // ux component
+            cntTop++;
+        }
+    }
+    double Delta_s = (cntTop ? sumUxTop / cntTop : 0.0);   // [m]
+    double gamma   = (H0 ? Delta_s / H0 : 0.0);            // [-]
+    double tau     = F_magnitude;                           // Pa (traction)
+    double G_sec   = (gamma ? tau / gamma : 0.0);           // Pa
+
+    printf("Δs = %.6e m\n", Delta_s);
+    printf("γ   = %.6e [-]\n",  gamma);
+    printf("G   = %.6e Pa (%.3f MPa)\n", G_sec, G_sec/1e6);
 
     CleanupNonlinearElasticityProblem(&M, &stiff, &K_csr, displacement, residual, dirichletValues);
     
