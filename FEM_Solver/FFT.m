@@ -44,9 +44,6 @@ for file_idx = 1:length(fft_files)
 
     for cStart = 1:chunkCols:nDOF
         cEnd = min(cStart + chunkCols - 1, nDOF);
-        % X = fft(displacements(:, cStart:cEnd), [], 1);         % N x (#chunk)
-        % mag = abs(X(1:max_index, :));                          % keep only low freqs
-        % global_fft_sum = global_fft_sum + sum(mag, 2);         % accumulate
         X = fft(displacements(:, cStart:cEnd), [], 1);     % N x (#chunk)
         X = X / N;                                          % Normalize by number of time steps
         X(2:end-1, :) = 2 * X(2:end-1, :);                  % One-sided spectrum scaling
