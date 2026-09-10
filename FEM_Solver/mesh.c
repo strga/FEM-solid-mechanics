@@ -9,7 +9,6 @@
 #include "gmshtools.h"
 #include "integral.h"
 #include "triplet.h"
-#include "Triplet_1.h"
 #include "gelement.h"
 #include "gelement3D.h"
 #include "Mesh_GetBndrSide.h"
@@ -340,16 +339,13 @@ void Mesh_FillPatches(mesh *this)
     int *PatchPom;
     int SumNodeDegree;
 
-    // Calculate the sum of node degrees
     SumNodeDegree = 0;
     for (i = 0; i < this->NPoints; i++) {
         SumNodeDegree += this->NodeDegree[i];
     }
 
-    // Allocate memory for PatchW and initialize
     this->PatchW = malloc((this->NPoints + 1) * sizeof(int));
     if (this->PatchW == NULL) {
-        // Handle the memory allocation error
         fprintf(stderr, "Error allocating memory for PatchW\n");
         return;
     }
@@ -358,24 +354,20 @@ void Mesh_FillPatches(mesh *this)
         this->PatchW[i] = this->PatchW[i-1] + this->NodeDegree[i-1];
     }
 
-    // Allocate memory for PatchListOfElements
     this->PatchListOfElements = malloc(SumNodeDegree * sizeof(int));
     if (this->PatchListOfElements == NULL) {
-        // Handle the memory allocation error and free already allocated memory
         fprintf(stderr, "Error allocating memory for PatchListOfElements\n");
         free(this->PatchW);
         return;
     }
     PatchPom = malloc(this->NPoints * sizeof(int));
     if (PatchPom == NULL) {
-        // Handle the memory allocation error and free already allocated memory
         fprintf(stderr, "Error allocating memory for PatchPom\n");
         free(this->PatchW);
         free(this->PatchListOfElements);
         return;
     }
 
-    // Initialize PatchPom array
     for (i = 0; i < this->NPoints; i++) {
         PatchPom[i] = 0; 
     }
@@ -388,8 +380,7 @@ void Mesh_FillPatches(mesh *this)
             PatchPom[idx]++;
         }
     }
-
-    // Free allocated memory for PatchPom
+    
     free(PatchPom);
 }
 /* ------------------------------------------------------------------------------------------------- */
@@ -486,7 +477,6 @@ void Mesh_FillPatches3D(mesh *this) {
         SumNodeDegree += this->NodeDegree[i];
     }
 
-    // Allocate memory for PatchW
     this->PatchW = malloc((this->NPoints + 1) * sizeof(int));
     if (this->PatchW == NULL) {
         fprintf(stderr, "Error allocating memory for PatchW\n");
@@ -497,7 +487,6 @@ void Mesh_FillPatches3D(mesh *this) {
         this->PatchW[i] = this->PatchW[i - 1] + this->NodeDegree[i - 1];
     }
 
-    // Allocate memory for PatchListOfElements
     this->PatchListOfElements = malloc(SumNodeDegree * sizeof(int));
     if (this->PatchListOfElements == NULL) {
         fprintf(stderr, "Error allocating memory for PatchListOfElements\n");
@@ -533,8 +522,7 @@ void Mesh_FillPatches3D(mesh *this) {
             PatchPom[idx]++;
         }
     }
-
-    // Free allocated memory for PatchPom
+    
     free(PatchPom);
 }
 /* ------------------------------------------------------------------------------------------------- */
@@ -545,7 +533,7 @@ void IdentifyFacePoints(mesh *this, int **facePoints) {
         return;
     }
 
-    // A point is on the boundary if its PointMark is nonzero
+    // Point is on the boundary if its PointMark is nonzero
     for (int i = 0; i < this->NPoints; i++) {
         (*facePoints)[i] = (this->PointMark[i] != 0) ? 1 : 0;
     }
@@ -687,7 +675,7 @@ void ComputeBasisFunctions(int elementType, double *N, double xi, double eta, do
 
             break;
 
-        case GMSH_QUADRANGLE: // Quadrilateral (4 Nodes, 2D) - sometimes N[2] and N[3] are swapped
+        case GMSH_QUADRANGLE: // Quadrilateral (4 Nodes, 2D)
             N[0] = (1 - xi) * (1 - eta);
             N[1] = xi * (1 - eta);
             N[2] = xi * eta;
@@ -834,30 +822,6 @@ void ComputeGradientMatrixG(gelement3D *K, double G[3][8], double xi, double eta
         G[1][j] = K->JacobianInv[1][0] * gradN_ref[0][j] + K->JacobianInv[1][1] * gradN_ref[1][j] + K->JacobianInv[1][2] * gradN_ref[2][j];
         G[2][j] = K->JacobianInv[2][0] * gradN_ref[0][j] + K->JacobianInv[2][1] * gradN_ref[1][j] + K->JacobianInv[2][2] * gradN_ref[2][j];
     }
-
-    // printf("Computed Gradients in Physical Space (G matrix):\n");
-    // for (int i = 0; i < 3; i++) {
-    //     for (int j = 0; j < K->Nvertex; j++) {
-    //         printf("G[%d][%d] = %f\n", i, j, G[i][j]);
-    //     }
-    // }
-    // printf("\n");
-
-    // printf("Computed invJ in Physical Space:\n");
-    // for (int i = 0; i < 3; i++) {
-    //     for (int j = 0; j < 3; j++) {
-    //         printf("J_inv[%d][%d] = %f\n", i, j, K->JacobianInv[i][j]);
-    //     }
-    // }
-    // printf("\n");
-
-    // printf("Computed gradN_ref in Physical Space:\n");
-    // for (int j = 0; j < K->Nvertex; j++) {
-    //     for (int k = 0; k < 3; k++) {
-    //         printf("gradN_ref[%d][%d] = %f\n", k, j, gradN_ref[k][j]);
-    //     }
-    // }
-    // printf("\n");
 }
 /* ------------------------------------------------------------------------------------------------- */
 int GetNumGaussPoints(int elementType) {
@@ -892,7 +856,7 @@ void GetGaussPoint(int elementType, int gp, double *xi, double *eta, double *zet
             }
             break;
 
-        case GMSH_QUADRANGLE: // 2x2 quadrature -skipped, no modificaiton right now
+        case GMSH_QUADRANGLE: // 2x2 quadrature -skipped, no modificaiton 
             {
                 double gp_points[4][2] = {
                     {-0.5773502692, -0.5773502692},
@@ -992,7 +956,7 @@ void GetGaussPoint(int elementType, int gp, double *xi, double *eta, double *zet
 /* ------------------------------------------------------------------------------------------------- */
 void ComputePhysicalCoordinates(double *x, double *y, double *z, gelement3D *K, double xi, double eta, double zeta) {
     int nBaseNodes = K->Nvertex; // Get the number of basis functions for the element type
-    double N[8] = {0};           // Maximum of 8 nodes (e.g., hexahedron)
+    double N[8] = {0};           // Maximum of 8 nodes (hexahedron)
 
     ComputeBasisFunctions(K->type, N, xi, eta, zeta, nBaseNodes);
 
@@ -1725,16 +1689,6 @@ void initializeMaterialProperties(mesh *M, MaterialProperties *materials)
                 materials[i].nu = 0.3;
                 materials[i].rho = 7800;
                 materials[i].model = SVK; // SVK
-
-                // materials[i].E = 1.6e6;
-                // materials[i].nu = 0.4;
-                // materials[i].rho = 1250;
-                // materials[i].model = SVK;// SVK My choosing
-
-                // materials[i].E = 70e9;
-                // materials[i].nu = 0.32;
-                // materials[i].rho = 2710;
-                // materials[i].model = SVK; //NEOHOOKE
                 break;
             case ALUMINUM:
                 materials[i].E = 70e9;
@@ -2115,7 +2069,7 @@ void assembleGlobalLumpedMassMatrix(mesh *this, triplet *massTriplet) {
         double rho = materials[e].rho;
         double multiplier = (rho * K.dV) / 3.0;
 
-        // Step 3: Fill the lumped mass matrix (diagonal only) - nodes of element only
+        // Fill the lumped mass matrix (diagonal only) - nodes of element only
         for (int i = 0; i < 3; i++) {
 
             localM[2 * i][2 * i] = multiplier;      // x-x component (node i)
@@ -2167,7 +2121,7 @@ void Mesh_Discretize_Dynamics(mesh *this, double *b, triplet *mass, triplet *p, 
     free(materials);
 }
 /* ------------------------------------------------------------------------------------------------- */
-//                                     OHYB NOSNIKU - 3D case
+//                                     Beam Beanding - 3D case
 /* ------------------------------------------------------------------------------------------------- */
 void calculateBMatrix3D(const gelement3D *K, double B[6][24], double G[3][8]) {
     int nbNodes = K->Nvertex;
@@ -2289,7 +2243,7 @@ int invert6x6(const double A[6][6], double A_inv[6][6]) {
     double temp[6][12];
     memset(temp, 0, sizeof(temp));
 
-    // Create [A | I] augmented matrix
+    // Create augmented matrix A E
     for (int i = 0; i < 6; ++i) {
         for (int j = 0; j < 6; ++j) {
             temp[i][j] = A[i][j];
@@ -2302,12 +2256,12 @@ int invert6x6(const double A[6][6], double A_inv[6][6]) {
         // Pivot
         double pivot = temp[i][i];
         if (fabs(pivot) < 1e-12)
-            return -1;  // Singular
+            return -1;  // Singular case
 
         for (int j = 0; j < 12; ++j)
             temp[i][j] /= pivot;
 
-        // Eliminate
+        // Elimination
         for (int k = 0; k < 6; ++k) {
             if (k == i) continue;
             double factor = temp[k][i];
@@ -2316,7 +2270,7 @@ int invert6x6(const double A[6][6], double A_inv[6][6]) {
         }
     }
 
-    // Extract inverse
+    // Extracting inverse
     for (int i = 0; i < 6; ++i)
         for (int j = 0; j < 6; ++j)
             A_inv[i][j] = temp[i][j + 6];
@@ -2406,7 +2360,7 @@ void computeLocalStiffnessMatrix3D(mesh *this, int elementIndex, double localK[2
         double J[3][3], J_inv[3][3];
         double det_J = 0.0;
 
-        // Compute gradients and Jacobian info
+        // Gradients and Jacobian info
         computeJacobianAndInverse(K.Ver, K.Nvertex, K.type, J, J_inv, &det_J, G, xi, eta, zeta);
         calculateBMatrix3D(&K, B, G);
 
@@ -2511,7 +2465,7 @@ void applyBoundaryConditions3D(mesh *this, double *b, double *dirichletValues, t
                 double N[8];
                 ComputeBasisFunctions(face.type, N, xi, eta, zeta, nVertices);
 
-                // Assemble vector traction into global RHS
+                // Assembly - traction vector into global RHS
                 for (int i = 0; i < nVertices; i++) {
                     int node = face.idxNode[i];
                     for (int d = 0; d < 3; d++) { // for u_x, u_y, u_z components
@@ -2556,14 +2510,6 @@ void applyBoundaryConditions3D(mesh *this, double *b, double *dirichletValues, t
         }
     }
 
-    // Artificially constrain all Z-DOFs to simulate pure XY bending
-    // for (int i = 0; i < this->NPoints; i++) {
-    //     int uz = 3 * i + 2; // Z-dof index
-    //     Triplet_Add(p, uz, uz, 1.0);
-    //     b[uz] = 0.0;
-    // }
-
-
     Triplet_Sort(p, 0, p->nz - 1);
     Triplet_Unique(p);
 }
@@ -2602,7 +2548,7 @@ void Mesh_Discretize_Statics3D_Orthotropic(mesh *this, double *b, triplet *p, do
         applyGravity3D(this, b, materials);
     }
 
-    // Apply boundary conditions (Dirichlet, Neumann, etc.)
+    // Apply boundary conditions (Dirichlet, Neumann)
     applyBoundaryConditions3D(this, b, dirichletValues, p, psi_force_3D, F_magnitude, azimuth_deg, elevation_deg);
 
     // Free the allocated memory for materials
@@ -2751,17 +2697,17 @@ void computeSVKStress(MaterialProperties mat, double F[3][3], double sigma[3][3]
     double lambda, mu;
     computeLameParameters(mat, &lambda, &mu);
 
-    // Step 1: Compute right Cauchy-Green deformation tensor: C = Fᵀ * F
+    // Right Cauchy-Green deformation tensor: C = F^T * F
     double C[3][3] = {{0}};
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             for (int k = 0; k < 3; k++) {
-                C[i][j] += F[k][i] * F[k][j];  // Note: Fᵀ * F
+                C[i][j] += F[k][i] * F[k][j];
             }
         }
     }
 
-    // Step 2: Compute Green-Lagrange strain tensor: E = 0.5 * (C - I)
+    // Green-Lagrange strain tensor: E = 0.5 * (C - I)
     double E[3][3];
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
@@ -2769,7 +2715,7 @@ void computeSVKStress(MaterialProperties mat, double F[3][3], double sigma[3][3]
         }
     }
 
-    // Step 3: Compute 2nd Piola-Kirchhoff stress: S = λ * tr(E) * I + 2μ * E
+    // 2nd Piola-Kirchhoff stress: S = lambda * tr(E) * I + 2*mu * E
     double trace_E = E[0][0] + E[1][1] + E[2][2];
 
     for (int i = 0; i < 3; i++) {
@@ -2792,11 +2738,11 @@ void computeTangentModulusSVK(MaterialProperties mat, double C[6][6]) {
 //                                      NEOHOOKE-Specific
 /* ------------------------------------------------------------------------------------------------- */
 int voigt_index(int i, int j) {
-    if (i == j) return i; // xx, yy, zz → 0,1,2
+    if (i == j) return i; // xx, yy, zz --> 0,1,2
     if ((i == 1 && j == 2) || (i == 2 && j == 1)) return 3; // yz
     if ((i == 0 && j == 2) || (i == 2 && j == 0)) return 4; // zx
     if ((i == 0 && j == 1) || (i == 1 && j == 0)) return 5; // xy
-    return -1; // error
+    return -1;
 }
 /* ------------------------------------------------------------------------------------------------- */
 void computeNeoHookeanStress(MaterialProperties mat, double F[3][3], double sigma[3][3]) {
@@ -2804,7 +2750,7 @@ void computeNeoHookeanStress(MaterialProperties mat, double F[3][3], double sigm
     computeLameParameters(mat, &lambda, &mu);
 
     if (mat.nu >= 0.4999) {
-        fprintf(stderr, "[Error] Neo-Hookean model not valid for near-incompressible material (ν = %.5f). Use a mixed formulation or compressible model.\n", mat.nu);
+        fprintf(stderr, "[Error] Neo-Hookean model not valid for near-incompressible material (ν = %.5f) \n", mat.nu);
         exit(EXIT_FAILURE);
     }
 
@@ -2818,14 +2764,14 @@ void computeNeoHookeanStress(MaterialProperties mat, double F[3][3], double sigm
         exit(EXIT_FAILURE);
     }
 
-    // Compute C = Fᵀ * F
+    // Compute C = F^T * F
     double C[3][3] = {{0}};
     for (int i = 0; i < 3; ++i)
         for (int j = 0; j < 3; ++j)
             for (int k = 0; k < 3; ++k)
                 C[i][j] += F[k][i] * F[k][j];
 
-    // Compute C⁻¹
+    // Compute inv C
     double detC = C[0][0]*(C[1][1]*C[2][2] - C[1][2]*C[2][1])
                 - C[0][1]*(C[1][0]*C[2][2] - C[1][2]*C[2][0])
                 + C[0][2]*(C[1][0]*C[2][1] - C[1][1]*C[2][0]);
@@ -2864,14 +2810,14 @@ void computeTangentModulusNeoHooke(const double F[3][3], MaterialProperties mat,
     double lambda, mu;
     computeLameParameters(mat, &lambda, &mu);
 
-    // Step 1: Compute right Cauchy-Green tensor C = Fᵀ * F
+    // Compute right Cauchy-Green tensor C = F^T * F
     double C[3][3] = {0};
     for (int i = 0; i < 3; ++i)
         for (int j = 0; j < 3; ++j)
             for (int k = 0; k < 3; ++k)
                 C[i][j] += F[k][i] * F[k][j];
 
-    // Step 2: Compute determinant of C = J^2
+    // Compute determinant of C = J^2
     double detC = C[0][0]*(C[1][1]*C[2][2] - C[1][2]*C[2][1])
                 - C[0][1]*(C[1][0]*C[2][2] - C[1][2]*C[2][0])
                 + C[0][2]*(C[1][0]*C[2][1] - C[1][1]*C[2][0]);
@@ -2884,7 +2830,7 @@ void computeTangentModulusNeoHooke(const double F[3][3], MaterialProperties mat,
 
     // double logJ = 0.5 * log(detC);
 
-    // Step 3: Compute inverse of C
+    // Compute inverse of C
     double C_inv[3][3];
     double invDet = 1.0 / detC;
 
@@ -2898,12 +2844,12 @@ void computeTangentModulusNeoHooke(const double F[3][3], MaterialProperties mat,
     C_inv[2][1] = -(C[0][0]*C[2][1] - C[0][1]*C[2][0]) * invDet;
     C_inv[2][2] =  (C[0][0]*C[1][1] - C[0][1]*C[1][0]) * invDet;
 
-    // Step 4: Symmetrize C-1
+    // Symmetrize C-1
     for (int i = 0; i < 3; ++i)
         for (int j = i + 1; j < 3; ++j)
             C_inv[i][j] = C_inv[j][i] = 0.5 * (C_inv[i][j] + C_inv[j][i]);
 
-    // Step 5: Build tangent modulus in Voigt notation
+    // Build tangent modulus in Voigt notation
     memset(C_voigt, 0, sizeof(double) * 6 * 6);
 
     for (int I = 0; I < 3; ++I) {
@@ -3057,12 +3003,12 @@ void computeInternalLocalResidualForceNonlinear3D(mesh *this, int elementIndex, 
         if (mat->model == NEOHOOKE || mat->model == SVK) 
         {
             double sigma_voigt[6] = {
-                sigma[0][0],                 /* σxx */
-                sigma[1][1],                 /* σyy */
-                sigma[2][2],                 /* σzz */
-                sigma[0][1],                 /* τxy = σxy */
-                sigma[1][2],                 /* τyz = σyz */
-                sigma[2][0]                  /* τzx = σzx */ // 2.0 * 
+                sigma[0][0],                 // sigma_xx
+                sigma[1][1],                 // sigma_yy
+                sigma[2][2],                 // sigma_zz
+                sigma[0][1],                 // tau_xy = sigma_xy
+                sigma[1][2],                 // tau_yz = sigma_yz
+                sigma[2][0]                  // tau_zx = sigma_zx 
             };
             for (int i = 0; i < ndof; i++) {
                 for (int a = 0; a < 6; a++) {
@@ -3166,8 +3112,8 @@ void computeLocalTangentStiffnessMatrixNonlinear3D(mesh *this, int elementIndex,
         computeJacobianAndInverse(K.Ver, K.Nvertex, K.type, J, Jinv, &det_J, G, xi, eta, zeta);
         computeDeformationGradient(&K, u_global, F, G);
 
-        double S[3][3];                     /* 2nd PK stress*/
-        computeStressNonLinear(mat, F, S);  /* fill S = σ */
+        double S[3][3];                   // 2nd PK tensor
+        computeStressNonLinear(mat, F, S);
 
         if (mat.model == SVK) {
             computeTangentModulusSVK(mat, C);
@@ -3189,13 +3135,11 @@ void computeLocalTangentStiffnessMatrixNonlinear3D(mesh *this, int elementIndex,
             }
         }
 
-        /* Gσ matrix :   Gσ_{ia} = n_j σ_{ji} φ_{,a}^j       (Hughes, eq. 20.3.37) */
         double Gsig[3][24] = {{0}};
         for (int a = 0; a < nBaseNodes; ++a)
         {
             for (int i = 0; i < 3; ++i)
             {
-                /* σ_{ji} * φ_,j */
                 for (int j = 0; j < 3; ++j)
                 {
                     Gsig[i][3 * a + j] += S[j][i] * G[j][a];
@@ -3205,7 +3149,7 @@ void computeLocalTangentStiffnessMatrixNonlinear3D(mesh *this, int elementIndex,
 
         for (int i = 0; i < 3 * nBaseNodes; ++i) {
             for (int j = 0; j < 3 * nBaseNodes; ++j) {
-                for (int k = 0; k < 3;  ++k) {         /* σ acts only on k∈{x,y,z} */
+                for (int k = 0; k < 3;  ++k) {
                     localK[i][j] += Gsig[k][i] * G[k][j / 3] * ((j % 3) == k) * dV;
                 }
             }
