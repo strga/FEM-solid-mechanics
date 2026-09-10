@@ -24,4 +24,10 @@
 - Newton-Raphson iteration for nonlinear problems
 - VTK output for visualization in ParaView
 
-## Repository Structure
+Contains MATLAB scripts for post-processing
+
+## Test Cases
+
+- Cantilever beam — linear and nonlinear bending (SVK, Neo-Hookean)
+- AGARD wing — orthotropic static and dynamic response
+- Poisson equation — L2 error convergence vs analytical solution
