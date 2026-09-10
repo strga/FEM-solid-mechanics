@@ -18,9 +18,9 @@ void InitializePoissonProblem(mesh *M, triplet *stiff, csr *A_csr, double **b, d
     Triplet_Allocate(stiff, nDOF, M->NElements * 100);
     *b = calloc(nDOF, sizeof(double));
     *dirichletValues = calloc(nDOF, sizeof(double));
-    *x = calloc(nDOF, sizeof(double)); // Allocate and initialize solution vector
+    *x = calloc(nDOF, sizeof(double));
 
-    // Set Dirichlet boundary conditions
+    // Set Dirichlet BCs
     for (int i = 0; i < M->NPoints; i++) {
         if (M->PointMark[i] == DIRICHLET_BC) {
             (*dirichletValues)[i] = sin(M_PI * M->x[i]) * sin(M_PI * M->y[i]);
@@ -117,13 +117,11 @@ void CleanupPoissonProblem3D(triplet *stiff, csr *A_csr, double *b, double *diri
 void InitializeStaticsProblem(mesh *M, triplet *stiff, csr *K_csr, double **b, double **dirichletValues, double **x, double angle_degrees, int gravity) {
     int nDOF = 2 * M->NPoints;
 
-    // Allocate stiffness triplet, load vector, and solution vector
     Triplet_Allocate(stiff, nDOF, M->NElements * 100);
     *b = calloc(nDOF, sizeof(double));
     *dirichletValues = calloc(nDOF, sizeof(double));
-    *x = calloc(nDOF, sizeof(double)); // Allocate and initialize solution vector
+    *x = calloc(nDOF, sizeof(double));
 
-    // Set Dirichlet boundary conditions
     for (int i = 0; i < M->NPoints; i++) {
         if (M->PointMark[i] == DIRICHLET_BC) {
             (*dirichletValues)[2 * i] = 0.0;
@@ -256,7 +254,7 @@ void InitializeStaticsProblem3D(mesh *M, triplet *stiff, csr *K_csr, double **b,
     Triplet_Allocate(stiff, nDOF, non_zero_allocated);
     *b = calloc(nDOF, sizeof(double));
     *dirichletValues = calloc(nDOF, sizeof(double));
-    *x = calloc(nDOF, sizeof(double)); // Allocate and initialize solution vector
+    *x = calloc(nDOF, sizeof(double));
 
     for (int elem = 0; elem < M->NTriangles + M->NQuads; elem++) {
         if (M->ElementMark[elem] == DIRICHLET_BC) {
@@ -279,10 +277,8 @@ void InitializeStaticsProblem3D(mesh *M, triplet *stiff, csr *K_csr, double **b,
     Mesh_Discretize_Statics3D(M, *b, stiff, *dirichletValues, psi_force_3D, F_magnitude, azimuth_deg, elevation_deg, gravity, angleX, angleY, angleZ);
 
     // printf("Mesh_discretize_3D (F1)\n");
-    // Convert triplet to CSR format
     CSR_InitFromTriplet(K_csr, stiff);
     // printf("CSR_from_triplet (F1)\n");
-    // Save stiffness matrix
     // saveSparseMatrixToFile(K_csr, "Statics_Stiffness_Matrix.dat");
 }
 
@@ -323,14 +319,6 @@ void InitializeStaticsProblem3D_Orthotropic(mesh *M, triplet *stiff, csr *K_csr,
     *x = calloc(nDOF, sizeof(double)); // Allocate and initialize solution vector
     printf("Variables initialized (Orthotropic)\n");
 
-    // Set Dirichlet boundary conditions
-    // for (int i = 0; i < M->NPoints; i++) {
-    //     if (M->PointMark[i] == DIRICHLET_BC) {
-    //         (*dirichletValues)[3 * i] = 0.0;
-    //         (*dirichletValues)[3 * i + 1] = 0.0;
-    //         (*dirichletValues)[3 * i + 2] = 0.0;
-    //     }
-    // }
     for (int elem = 0; elem < M->NTriangles + M->NQuads; elem++) {
         if (M->ElementMark[elem] == DIRICHLET_BC) {
             gelement3D K;
@@ -366,14 +354,13 @@ void ExecuteStaticsAnalysis3D_Orthotropic(mesh *M, csr *K_csr, double *b, double
         ConjugateGradient(K_csr, b, x, 1e5, tolerance);
     }
 
-    // Optionally, save displacement vector to a file
+    // Save displacement vector to a file
     // saveVectorToFile(x, nDOF, 1, "Orthotropic_Statics_Displacement_Vector.dat");
 
     printf("Statics analysis completed for orthotropic materials.\n");
 }
 
 void CleanupStaticsProblem3D_Orthotropic(triplet *stiff, csr *K_csr, double *b, double *dirichletValues, double *x) {
-    // Free allocated memory
     Triplet_Free(stiff);
     CSR_Free(K_csr);
     free(b);
@@ -406,7 +393,7 @@ void InitializeDynamicProblem3D(mesh *M, triplet *mass, triplet *stiff, triplet 
             GetElement3D(M, &K, elem);
             for (int i = 0; i < K.Nvertex; i++) {
                 int node = K.idxNode[i];
-                // Set ALL vector components for this node
+
                 (*dirichletValues)[3 * node    ] = 0.0;
                 (*dirichletValues)[3 * node + 1] = 0.0;
                 (*dirichletValues)[3 * node + 2] = 0.0;
@@ -501,7 +488,7 @@ void InitializeDynamicProblem3D_Orthotropic(mesh *M, triplet *mass, triplet *sti
             GetElement3D(M, &K, elem);
             for (int i = 0; i < K.Nvertex; i++) {
                 int node = K.idxNode[i];
-                // Set ALL vector components for this node
+
                 (*dirichletValues)[3 * node    ] = 0.0;
                 (*dirichletValues)[3 * node + 1] = 0.0;
                 (*dirichletValues)[3 * node + 2] = 0.0;
@@ -514,8 +501,7 @@ void InitializeDynamicProblem3D_Orthotropic(mesh *M, triplet *mass, triplet *sti
             GetElement3D(M, &K, elem);
             for (int i = 0; i < K.Nvertex; i++) {
                 int node = K.idxNode[i];
-                int dof_index = 3 * node; // Use global node number!
-                // double y = M->y[node];    // Use global node number!
+                int dof_index = 3 * node;
                 (*v)[dof_index]     = 0.0;
                 (*v)[dof_index + 1] = -2.0;
                 (*v)[dof_index + 2] = 0.0;
@@ -607,17 +593,8 @@ void InitializeNonlinearElasticityProblem(mesh *M, triplet *stiff, csr *K_csr, d
     //     (*displacement)[i] = -0.5;
     // }
     
-
     printf("Allocation done\n");
 
-    // Set Dirichlet boundary conditions (example: fixing the first and last points)
-    // for (int i = 0; i < M->NPoints; i++) {
-    //     if (M->PointMark[i] == DIRICHLET_BC) {
-    //         (*dirichletValues)[3 * i] = 0.0;  // Set the displacement for Dirichlet BCs
-    //         (*dirichletValues)[3 * i + 1] = 0.0;  // Set the displacement for Dirichlet BCs
-    //         (*dirichletValues)[3 * i + 2] = 0.0;  // Set the displacement for Dirichlet BCs
-    //     }
-    // }
     for (int elem = 0; elem < M->NTriangles + M->NQuads; elem++) {
         if (M->ElementMark[elem] == DIRICHLET_BC) {
             gelement3D K;
