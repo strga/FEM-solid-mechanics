@@ -10,19 +10,15 @@ d = -( eps1 + eps2 * omega * omega ) / 2;
 
 omega_damped = sqrt( omega * omega - (eps1 + eps2 * omega * omega)^2 / 4 );
 
-disp('Koeficient utlumu d:');
+disp('Coefficient of damping d:');
 disp(d);
 
-disp('Vlastni frekvence tlumeni:');
+disp('Angular eigenfrequency of damping:');
 disp(omega_damped);
 
 % time, x_displacement, y_displacement
-% data = load('/Users/strihavka/Documents/FEM_Diplom/FEM/Vibration_data/Bending_damping/New_Linear_point_displacement_damp.dat');
-% data = load('/Users/strihavka/Documents/FEM_Diplom/FEM/Vibration_data/New_Linear_point_displacement_damp_testing68.dat');
+data = load('Displacement_damping.dat');
 
-data = load('/Users/strihavka/Documents/FEM_Diplom/FEM/Beam_diplom4_displacement_damping_100K_small.dat');
-
-% Extract each column into separate variables
 time = data(:,1);
 u_x  = data(:,2);
 u_y  = data(:,3);
@@ -38,7 +34,7 @@ plot(time, y)
 
 num_plots = 3;
 
-% Create a figure
+%figures
 figure;
 
 % Plot the x-displacement over time
