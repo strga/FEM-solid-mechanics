@@ -14,7 +14,7 @@ if flag ~= 0
    warning('Some eigenvalues did not converge');
 end
 
-% --- Identify and zero out constrained DOFs ---
+% Identify and zero out constrained DOFs
 fixedDOF = find(abs(diag(mass) - 1.0) < 1e-12);
 V_scaled(fixedDOF, :) = 0;  % enforce zero displacement at fixed DOFs
 
