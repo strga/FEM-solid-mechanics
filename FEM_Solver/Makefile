@@ -18,7 +18,7 @@ clean:
 	rm -f *.o program.exe
 
 # Object files list
-OBJ_FILES = mesh.o wlog.o gmshtools.o gelement.o gelement3D.o triplet.o Mesh_GetBndrSide.o csr.o integral.o saving.o sparse_1.o triplet_1.o vector_1.o dynamics.o problems.o Poisson.o Nonlinear.o
+OBJ_FILES = mesh.o wlog.o gmshtools.o gelement.o gelement3D.o triplet.o Mesh_GetBndrSide.o csr.o integral.o saving.o dynamics.o problems.o Poisson.o Nonlinear.o
 
 CFLAGS = -g -Wall -fsanitize=address $(PETSC_CFLAGS) -I$(MPI_DIR)/include -I$(SUITE_SPARSE_DIR) -I$(FFTW_DIR)/include -I$(PETSC_INCLUDE)
 
@@ -65,15 +65,6 @@ integral.o: integral.c integral.h
 
 saving.o: saving.c saving.h
 	gcc -c $(CFLAGS) saving.c
-
-triplet_1.o: triplet_1.c triplet_1.h
-	gcc -c $(CFLAGS) triplet_1.c
-
-sparse_1.o: sparse_1.c sparse_1.h
-	gcc -c $(CFLAGS) sparse_1.c
-
-vector_1.o: vector_1.c vector_1.h
-	gcc -c $(CFLAGS) vector_1.c
 
 dynamics.o: dynamics.c dynamics.h
 	gcc -c $(CFLAGS) dynamics.c
