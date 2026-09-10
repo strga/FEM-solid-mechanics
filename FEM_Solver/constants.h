@@ -10,7 +10,7 @@
 #define VTK_WEDGE               13
 #define VTK_PYRAMID             14
 /* ----------------------------------------------------------------------------------------- */
-#define GMSH_POINT            15 //Added for mesh.c/.h -> all of them are GMSH-defined identifiers
+#define GMSH_POINT            15
 #define GMSH_SEGMENT          1
 #define GMSH_TRIANGLE         2
 #define GMSH_QUADRANGLE       3
