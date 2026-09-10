@@ -3,17 +3,13 @@ close all;
 clc;
 format longG;
 
-% fft_files = {
-%     '/Volumes/MacOS/Orthotropic_Wing/Wing_0_FFT.dat'
-% 
-
 fft_files = {
-    '/Users/strihavka/Documents/FEM_Diplom/FEM/Beam_diplom5_FFT.dat'
+    'Beam_5_FFT.dat'
 };
 
 index = 14;                % spectrum truncation
-chunkCols = 512;           % tune this to fit your RAM (256–1024 is usually safe)
-useSingle = false;         % set true to halve memory (slight precision loss)
+chunkCols = 512;    
+useSingle = false;         
 
 combined_frequencies = cell(length(fft_files), 1);
 combined_fft_sums    = cell(length(fft_files), 1);
