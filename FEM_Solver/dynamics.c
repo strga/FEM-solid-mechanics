@@ -183,7 +183,7 @@ void NewmarkIntegrate(mesh *this, csr *M_csr, csr *K_csr, csr *D_csr , double *F
         CSR_Free(&D_scaled);
     }
 
-    // Step 3: Allocate temporary vectors
+    // Allocate temporary vectors
     double *tempU = calloc(nDOF, sizeof(double));
     double *tempV = calloc(nDOF, sizeof(double));
     double *tempA = calloc(nDOF, sizeof(double));
@@ -204,7 +204,7 @@ void NewmarkIntegrate(mesh *this, csr *M_csr, csr *K_csr, csr *D_csr , double *F
         return;
     }
 
-    // Step 4: Initialize acceleration (a = M^-1 * (F - K * u))n
+    // Initialize acceleration (a = M^-1 * (F - K * u))n
     CSR_Multiply(K_csr, u, effectiveF); // effectiveF = K * u
     if (useDamping) {
         CSR_Multiply(D_csr, v, dampingForce); // Initialize damping force
@@ -313,11 +313,8 @@ void NewmarkIntegrate(mesh *this, csr *M_csr, csr *K_csr, csr *D_csr , double *F
             if (!useDamping) {
                 fprintf(energy_file, "%.5f, %.5f, %.5f, %.5f\n", time, kinetic_energy, potential_energy, kinetic_energy + potential_energy); // Conservation of energy
             }
-            // if (useDamping) {
-            //     fprintf(energy_dumping_file, "%.5f, %.5f, %.5f, %.5f, %.5f, %.5f\n", time, kinetic_energy, potential_energy, initial_energy, work_ref, kinetic_energy + potential_energy - work_ref + initial_energy); // Conservation of energy
-            // }
             if (useDamping) {
-                fprintf(energy_dumping_file, "%.5f, %.5f, %.5f, %.5f, %.5f, %.5f\n", time, kinetic_energy, potential_energy, initial_energy, work_cumulative, kinetic_energy + potential_energy - work_cumulative + initial_energy); // Conservation of energy ALTERNATIVE
+                fprintf(energy_dumping_file, "%.5f, %.5f, %.5f, %.5f, %.5f, %.5f\n", time, kinetic_energy, potential_energy, initial_energy, work_cumulative, kinetic_energy + potential_energy - work_cumulative + initial_energy); // Conservation of energy
             }
             if (step % 2 == 0) {
                 if (this->dim == 2) {
