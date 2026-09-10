@@ -2,10 +2,10 @@ clear all;
 close all;
 clc;
 
-M = load_gmsh('/Users/strihavka/Documents/FEM_Diplom/FEM/Elasticity_Geo/AGARD_v2.msh');
+M = load_gmsh('AGARD_v2.msh');
 
-mass = spconvert(load('/Volumes/MacOS/Orthotropic_Wing/Ortotropic_wing_0_mass_scaled.dat')); 
-stiff = spconvert(load('/Volumes/MacOS/Orthotropic_Wing/Ortotropic_wing_0_stiff_scaled.dat'));
+mass = spconvert(load('Ortotropic_wing_0_mass_scaled.dat')); 
+stiff = spconvert(load('Ortotropic_wing_0_stiff_scaled.dat'));
 
 n_all = 30;  
 [V, D, flag] = eigs(stiff, mass, n_all, 'smallestabs');
@@ -25,13 +25,13 @@ freqs = sqrt(diag(D)) / (2*pi);
 [freqs, sortIdx] = sort(freqs);
 V = V(:, sortIdx);
 
-% Find unique frequencies within a tolerance
+% Find unique frequencies within tolerance
 tol = 1e-3; % tolerance for uniqueness (Hz)
 uniqueIdx = [1; find(diff(freqs) > tol) + 1];
 uniqueFreqs = freqs(uniqueIdx);
 
 % Pick first n unique modes
-n_unique = min(10, numel(uniqueIdx));  % e.g., first 10 unique frequencies
+n_unique = min(10, numel(uniqueIdx));
 fprintf('Unique eigenfrequencies [Hz]:\n');
 disp(uniqueFreqs(1:n_unique));
 
