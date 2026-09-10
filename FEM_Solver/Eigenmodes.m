@@ -11,7 +11,7 @@ n_all = 30;
 [V, D, flag] = eigs(stiff, mass, n_all, 'smallestabs');
 
 if flag ~= 0
-   warning('Some eigenvalues did not converge.');
+   warning('Some eigenvalues did not converge');
 end
 
 % --- Identify and zero out constrained DOFs ---
