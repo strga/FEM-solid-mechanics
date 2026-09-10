@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h> //fabs, sin...
 #include <assert.h> //assert
-#include <cholmod.h>   // For CHOLMOD library
+// #include <cholmod.h>   // For CHOLMOD library
 #include <umfpack.h>   // For UMFPACK library
 #include <cs.h>        // For CSparse library
 #include <petscksp.h> // For PETSc library
@@ -20,6 +20,10 @@
 #include "Poisson.h"
 #include "dynamics.h"
 #include "problems.h"
+
+#include "Triplet_1.h"
+#include "sparse_1.h"
+#include "vector_1.h"
 
 // #define POISSON2D
 // #define STATICS2D
@@ -371,7 +375,7 @@ mesh M;
     double eps2 = 0.0006;
     double alpha = 2.0;
     int gravity = FALSE;
-    int Damping = TRUE;
+    int Damping = FALSE;
     double dt = 0.00006;
     int nSteps = 50000;
     int saveVKT = FALSE;

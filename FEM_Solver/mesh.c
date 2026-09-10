@@ -9,6 +9,7 @@
 #include "gmshtools.h"
 #include "integral.h"
 #include "triplet.h"
+#include "Triplet_1.h"
 #include "gelement.h"
 #include "gelement3D.h"
 #include "Mesh_GetBndrSide.h"
@@ -1720,20 +1721,20 @@ void initializeMaterialProperties(mesh *M, MaterialProperties *materials)
         int marker = M->ElementMark[i];
         switch (marker) {
             case STEEL:
-                // materials[i].E = 210e9;
-                // materials[i].nu = 0.3;
-                // materials[i].rho = 7800;
-                // materials[i].model = SVK; // SVK
+                materials[i].E = 210e9;
+                materials[i].nu = 0.3;
+                materials[i].rho = 7800;
+                materials[i].model = SVK; // SVK
 
                 // materials[i].E = 1.6e6;
                 // materials[i].nu = 0.4;
                 // materials[i].rho = 1250;
                 // materials[i].model = SVK;// SVK My choosing
 
-                materials[i].E = 70e9;
-                materials[i].nu = 0.32;
-                materials[i].rho = 2710;
-                materials[i].model = SVK; //NEOHOOKE
+                // materials[i].E = 70e9;
+                // materials[i].nu = 0.32;
+                // materials[i].rho = 2710;
+                // materials[i].model = SVK; //NEOHOOKE
                 break;
             case ALUMINUM:
                 materials[i].E = 70e9;

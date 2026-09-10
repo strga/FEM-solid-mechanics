@@ -32,10 +32,10 @@ void initializeSimulationConfig(SimulationConfig *config) {
     // snprintf(config->timeSeriesFile, sizeof(config->timeSeriesFile), "Wing_matrix_etc/Beam_FFT.dat"); //FFT required data set
 
     // FOR WING
-    snprintf(config->displacementFile, sizeof(config->displacementFile), "Beam_diplom4_displacement_damping_100K_small.dat"); //Displacemen / vibration of chosen point
-    snprintf(config->energyFile, sizeof(config->energyFile), "Beam_diplom4_energy_conserved_damping_100K_small.txt"); // Conservation of energy file
-    snprintf(config->energyDampingFile, sizeof(config->energyDampingFile), "Beam_diplom4_energy_conserved_damping_100K_small.txt"); // Conservaiton of damped system
-    snprintf(config->timeSeriesFile, sizeof(config->timeSeriesFile), "Beam_diplom4_FFT_damping_100K_small.dat"); //FFT required data set
+    snprintf(config->displacementFile, sizeof(config->displacementFile), "Beam_diplom4_displacement_damping_100K_small_new.dat"); //Displacemen / vibration of chosen point
+    snprintf(config->energyFile, sizeof(config->energyFile), "Beam_diplom4_energy_conserved_100K_small_new.txt"); // Conservation of energy file
+    snprintf(config->energyDampingFile, sizeof(config->energyDampingFile), "Beam_diplom4_energy_conserved_damping_100K_small_new.txt"); // Conservaiton of damped system
+    snprintf(config->timeSeriesFile, sizeof(config->timeSeriesFile), "Beam_diplom4_FFT_damping_100K_small_new.dat"); //FFT required data set
 }
 
 int findNeumannBoundaryNode(const mesh *M) {

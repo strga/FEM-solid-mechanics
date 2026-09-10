@@ -441,9 +441,9 @@ void InitializeDynamicProblem3D(mesh *M, triplet *mass, triplet *stiff, triplet 
     CSR_InitFromTriplet(K_csr, stiff); printf("CSR_InitFromTriplet STIFF done\n");
     CSR_InitFromTriplet(D_csr, dump); printf("CSR_InitFromTriplet DAMP done\n");
 
-    saveSparseMatrixToFile(M_csr, "Matrices_modal/Mass_matrix_damping_100K.dat");
-    saveSparseMatrixToFile(K_csr, "Matrices_modal/Stiff_matrix_damping_100K.dat");
-    saveSparseMatrixToFile(D_csr, "Matrices_modal/Damping_matrix_damping_100K.dat");
+    saveSparseMatrixToFile(M_csr, "Matrices_modal/Mass_matrix_damping_100K_NEW.dat");
+    saveSparseMatrixToFile(K_csr, "Matrices_modal/Stiff_matrix_damping_100K_NEW.dat");
+    saveSparseMatrixToFile(D_csr, "Matrices_modal/Damping_matrix_damping_100K_NEW.dat");
     printf("Stop after unscaled matrices loaded:\n");
     getchar();
 }
@@ -452,9 +452,9 @@ void ExecuteDynamicAnalysis3D(mesh *M, csr *M_csr, csr *K_csr, csr *D_csr, doubl
     
     scaleMatricesForDirichlet(M, M_csr, Damping ? D_csr : NULL, omega, eps1, eps2, 3, Damping);
 
-    saveSparseMatrixToFile(M_csr, "Matrices_modal/Mass_matrix_scaled_damping_100K.dat");
-    saveSparseMatrixToFile(K_csr, "Matrices_modal/Stiff_matrix_scaled_damping_100K.dat");
-    saveSparseMatrixToFile(D_csr, "Matrices_modal/Damping_matrix_scaled_damping_100K.dat");
+    saveSparseMatrixToFile(M_csr, "Matrices_modal/Mass_matrix_scaled_damping_100K_NEW.dat");
+    saveSparseMatrixToFile(K_csr, "Matrices_modal/Stiff_matrix_scaled_damping_100K_NEW.dat");
+    saveSparseMatrixToFile(D_csr, "Matrices_modal/Damping_matrix_scaled_damping_100K_NEW.dat");
 
     NewmarkIntegrate(M, M_csr, K_csr, D_csr, F, u, v, a, dt, nSteps, Damping, saveVKT, saveData, config);
 }
