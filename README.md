@@ -19,7 +19,6 @@
 - Galerkin FEM with isoparametric elements (triangles, quads, tetrahedra, hexahedra, wedges, pyramids)
 - Sparse stiffness and mass matrix assembly in CSR format
 - Direct solver: UMFPACK
-- Iterative solver: PETSc KSP
 - Newmark-beta scheme for time integration
 - Newton-Raphson iteration for nonlinear problems
 - VTK output for visualization in ParaView
